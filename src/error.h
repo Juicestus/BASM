@@ -14,6 +14,8 @@
 #include <iostream>
 #include <string>
 
+#include "parse.h"
+
 /**
  * @brief Prints an error in red to console and exits the program.
  * 
@@ -21,5 +23,20 @@
  * @param s std::string - Error message.
  */
 void error(int n, std::string s);
+
+/**
+ * @brief Formats a string vector
+ * 
+ * @param sv std::vector&lt;std::string&gt - String vector.
+ * @returns std::string - Printable array string.
+ */
+std::string printableVector(std::vector<std::string> sv);
+
+/**
+ * @brief Prints lines of code and relevant information
+ * 
+ * @param lines std:vector&lt;std::string&gt; - Lines of code.
+ */
+void printLines(std::vector<Line> lines);
 
 #endif

@@ -13,8 +13,10 @@
 #include <string>
 #include <vector>
 
-#include "strutils.h"
+#include "variable.h"
+#include "parse.h"
 #include "error.h"
+#include "read.h"
 
 /**
  * @brief Main function of course (:
@@ -28,7 +30,17 @@ int main(int argc, char *argv[])
     if (argc < 2) {
         error(-1, "No input file specified.");
     } else {
-        //std::string input = readFile(argv[1]);
+        std::string code = readFile(argv[1]);
+        std::pair<std::vector<std::string>, std::vector<Line>> 
+        linePair = parseLines(code);
+
+        std::vector<std::string> strings = linePair.first;
+        std::vector<Line> lines = linePair.second;
+
+        printLines(lines);
+        std::cout << printableVector(strings) << std::endl;
+
+
     }
     return 0;
 

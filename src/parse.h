@@ -1,9 +1,9 @@
 /**
- * @file strutils.h
+ * @file parse.h
  * @author Justus Languell (jus@gtsbr.org)
- * @brief Header for string utilities used across the codebase.
- * @version 0.1
- * @date 2021-08-07
+ * @brief Header for functions to parse the code into usable representation.
+ * @version 0.2
+ * @date 2021-08-08
  * 
  * @copyright Copyright (c) 2021
  */
@@ -44,5 +44,42 @@ std::string replaceString(std::string subject, const std::string& search,
  * @return std::vector<std::string> - Vector of seperated strings.
  */
 std::vector<std::string> splitString(std::string subject, const char delimiter);
+
+/**
+ * @brief Char in string
+ * 
+ * @param c char - The character to look for.
+ * @param s std::string - The string to look in.
+ */
+bool charInString(char c, std::string s);
+
+/**
+ * @brief Replaces string literals with special identifiers and stores them.
+ * 
+ * @param s std::string - String of source code
+ * @param delim char - String delimiter character
+ * @return std::pair<std::string, std::vector<std::string>> 
+ */
+std::pair<std::string, std::vector<std::string>> 
+        removeDemlimStr(std::string s, char delim);
+
+/**
+ * @brief Structure to hold the relavant information from a line of code.
+ */
+struct Line {
+    std::string pointer;
+    std::string command;
+    std::vector<std::string> arguments;
+    std::vector<std::string> returns;
+};
+
+/**
+ * @brief Parse source code into vector of line objects.
+ * 
+ * @param code std::string - Source code.
+ * @return std::vector<Line> - The parsed lines of code.
+ */
+std::pair<std::vector<std::string>, std::vector<Line>> 
+        parseLines(std::string code);
 
 #endif

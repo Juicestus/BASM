@@ -1,0 +1,8 @@
+( Count to 100 )
+
+set : counter, 0. ;			
+add : counter, 1 : counter ;		
+pointer ;
+print : counter, '\n' ;			
+lteq : counter, 100 : shouldJump ;	
+jump : souldJump, pointer ;

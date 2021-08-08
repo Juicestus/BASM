@@ -1,7 +1,7 @@
 /**
  * @file Variableiable.h
  * @author Justus Languell jus@gtsbr.org
- * @brief 
+ * @brief Defines the type namespace and variable class
  * @version 0.1
  * @date 2021-08-08
  * 
@@ -14,20 +14,28 @@
 #include <string>
 #include <vector>
 
+#include "variable.h"
+
 namespace Type 
 {
     const int NONE = 0;
-    const int INT = 1;
-    const int FLOAT = 2;
-    const int STRING = 3;
-    const int ARRAY = 4;
+    const int BOOL = 1;
+    const int INT = 2;
+    const int FLOAT = 3;
+    const int STRING = 4;
+    const int ARRAY = 5;
 }
 
+/**
+ * @brief Variable class
+ * @note Method comments are in implementation file.
+ */
 class Variable
 {
 private:
     int type;
 
+    bool boolVal;
     long int intVal;
     double floatVal;
     std::string strVal;
@@ -35,15 +43,17 @@ private:
 
 public:
     Variable();
+    Variable(bool boolv);
     Variable(long int intv);
     Variable(double flaotv);
     Variable(std::string strv);
     Variable(std::vector<Variable> arrayv);
 
-    void setInt(long int intVal);
-    void setFloat(double floatVal);
-    void setString(std::string strVal);
-    void setArray(std::vector<Variable> arrayVal);
+    void setBool(bool boolv);
+    void setInt(long int intv);
+    void setFloat(double floatv);
+    void setString(std::string strv);
+    void setArray(std::vector<Variable> arrayv);
 };
 
 #endif
