@@ -1,0 +1,5 @@
+.DS_Store
+.vscode
+bin/src
+bin/src/*
+bin/src/*.o
