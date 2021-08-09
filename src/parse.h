@@ -8,12 +8,14 @@
  * @copyright Copyright (c) 2021
  */
 
-#ifndef STRUTILS_H_
-#define STRUTILS_H_
+#ifndef PARSE_H_
+#define PARSE_H_
 
 #include <iostream>
 #include <string>
 #include <vector>
+
+const std::string STR_REPL = "__STRINGLIT__";
 
 /**
  * @brief Removes comments from the file content.
@@ -35,15 +37,6 @@ std::string removeComments(std::string code, char open, char close);
  */
 std::string replaceString(std::string subject, const std::string& search,
                           const std::string& replace);
-
-/**
- * @brief Remove spaces from the code.
- * 
- * @param s std::stirng - Code w/ spaces.
- * @return std::string - Code w/o spaces.
- */
-std::string removeSpaces(std::string s);
-
 /**
  * @brief 
  * 
@@ -52,6 +45,14 @@ std::string removeSpaces(std::string s);
  * @return std::vector&lt;std::string&gt; - Vector of seperated strings.
  */
 std::vector<std::string> splitString(std::string subject, const char delimiter);
+
+/**
+ * @brief Remove spaces from the code.
+ * 
+ * @param s std::stirng - Code w/ spaces.
+ * @return std::string - Code w/o spaces.
+ */
+std::string removeSpaces(std::string s);
 
 /**
  * @brief Char in string

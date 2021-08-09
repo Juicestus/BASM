@@ -8,7 +8,12 @@
  * @copyright Copyright (c) 2021
  */
 
+#include <iostream>
+#include <string>
+#include <vector>
+
 #include "variable.h"
+#include "error.h"
 
 /**
  * @brief Construct a new Variable and set type to None
@@ -123,4 +128,27 @@ void Variable::setArray(std::vector<Variable> arrayv)
     Variable::type = Type::ARRAY;
     Variable::arrayVal = arrayv;
 }
-    
+
+void Variable::repr()
+{
+    if (Variable::type == Type::NONE) {
+        std::cout << "(NONE)" << std::endl;
+    } else if (Variable::type == Type::BOOL) {
+        std::cout << ((boolVal) ? "true" : "false") << " (BOOL)\n";
+    } else if (Variable::type == Type::INT) {
+        std::cout << Variable::intVal << " (INT)" << std::endl;
+    } else if (Variable::type == Type::FLOAT) {
+        printf(".3%f (FLOAT)", Variable::floatVal);
+    } else if (Variable::type == Type::STRING) {
+        std::cout << "\"" << Variable::strVal << "\" (STR)\n";
+    } else if (Variable::type == Type::ARRAY) {
+        std::cout << "[ ";
+        for (Variable var : Variable::arrayVal) {
+            var.repr();
+            std::cout << ", ";
+        }
+        std::cout << "] (ARRAY)\n";
+    } else {
+        error(-1, "Unkown variable type in repr");
+    }
+}

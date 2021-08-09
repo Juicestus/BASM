@@ -8,8 +8,6 @@
  * @copyright Copyright (c) 2021
  */
 
-////////////////////////////////////////////////////////////////////////////////
-
 #include <iostream>
 #include <string>
 #include <vector>
@@ -110,7 +108,7 @@ bool charInString(char c, std::string s)
  * 
  * @param s std::string - String of source code
  * @param delim char - String delimiter character
- * @return std::pair\&lt;std::string, std::vector\&lt;std::string\&gt;\&gt;
+ * @return std::pair&lt;std::string, std::vector&lt;std::string&gt;&gt;
  */
 std::pair<std::string, std::vector<std::string>> 
         removeDemlimStr(std::string s, char delim)
@@ -126,7 +124,7 @@ std::pair<std::string, std::vector<std::string>>
                 removedStrings.push_back(curString);
                 curString = "";
             } else {
-                stringless += ("__STRINGLIT__" + std::to_string(removedStrings.size()) + "__");
+                stringless += (STR_REPL + std::to_string(removedStrings.size()));
             }
             partOfString = !partOfString;
         } else {
@@ -151,7 +149,7 @@ std::string removeSpaces(std::string s)
 {
     std::string result = "";
     for (char c : s) {
-        if (c != ' ' || c != '\t') result += c;
+        if (c != ' ' && c != '\t') result += c;
     }
     return result;
 }

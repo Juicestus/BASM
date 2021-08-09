@@ -17,6 +17,8 @@
 #include "parse.h"
 #include "error.h"
 #include "read.h"
+#include "stack.h"
+#include "eval.h"
 
 /**
  * @brief Main function of course (:
@@ -37,9 +39,8 @@ int main(int argc, char *argv[])
         std::vector<std::string> strings = linePair.first;
         std::vector<Line> lines = linePair.second;
 
-        printLines(lines);
-        std::cout << printableVector(strings) << std::endl;
-
+        Stack stack = Stack(strings);
+        evaluate(stack, lines);
 
     }
     return 0;

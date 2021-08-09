@@ -11,6 +11,7 @@
 #ifndef Variable_H_
 #define Variable_H_
 
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -54,6 +55,8 @@ public:
     void setFloat(double floatv);
     void setString(std::string strv);
     void setArray(std::vector<Variable> arrayv);
+
+    void repr();
 };
 
 #endif
