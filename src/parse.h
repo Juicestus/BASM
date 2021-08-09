@@ -37,11 +37,19 @@ std::string replaceString(std::string subject, const std::string& search,
                           const std::string& replace);
 
 /**
+ * @brief Remove spaces from the code.
+ * 
+ * @param s std::stirng - Code w/ spaces.
+ * @return std::string - Code w/o spaces.
+ */
+std::string removeSpaces(std::string s);
+
+/**
  * @brief 
  * 
  * @param subject std::string - The string to be parsed.
  * @param delimiter char - The delimiter character.
- * @return std::vector<std::string> - Vector of seperated strings.
+ * @return std::vector&lt;std::string&gt; - Vector of seperated strings.
  */
 std::vector<std::string> splitString(std::string subject, const char delimiter);
 
@@ -58,7 +66,7 @@ bool charInString(char c, std::string s);
  * 
  * @param s std::string - String of source code
  * @param delim char - String delimiter character
- * @return std::pair<std::string, std::vector<std::string>> 
+ * @return std::pair&lt;std::string, std::vector&lt;std::string&gt;&gt; 
  */
 std::pair<std::string, std::vector<std::string>> 
         removeDemlimStr(std::string s, char delim);
@@ -77,7 +85,7 @@ struct Line {
  * @brief Parse source code into vector of line objects.
  * 
  * @param code std::string - Source code.
- * @return std::vector<Line> - The parsed lines of code.
+ * @return std::vector&lt;Line&gt; - The parsed lines of code.
  */
 std::pair<std::vector<std::string>, std::vector<Line>> 
         parseLines(std::string code);

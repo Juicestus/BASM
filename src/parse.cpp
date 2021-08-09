@@ -68,7 +68,7 @@ std::string replaceString(std::string subject, const std::string& search,
  * 
  * @param subject std::string - The string to be parsed.
  * @param delimiter char - The delimiter character.
- * @return std::vector<std::string> - Vector of seperated strings.
+ * @return std::vector&lt;std::string&gt; - Vector of seperated strings.
  */
 std::vector<std::string> 
         splitString(std::string subject, const char delimiter)
@@ -85,6 +85,7 @@ std::vector<std::string>
             currentToken += subject[i];
         }
     }
+    tokens.push_back(currentToken);
     return tokens;
 }
 
@@ -109,7 +110,7 @@ bool charInString(char c, std::string s)
  * 
  * @param s std::string - String of source code
  * @param delim char - String delimiter character
- * @return std::pair<std::string, std::vector<std::string>> 
+ * @return std::pair\&lt;std::string, std::vector\&lt;std::string\&gt;\&gt;
  */
 std::pair<std::string, std::vector<std::string>> 
         removeDemlimStr(std::string s, char delim)
@@ -141,17 +142,32 @@ std::pair<std::string, std::vector<std::string>>
 }
 
 /**
+ * @brief Remove spaces from the code.
+ * 
+ * @param s std::stirng - Code w/ spaces.
+ * @return std::string - Code w/o spaces.
+ */
+std::string removeSpaces(std::string s) 
+{
+    std::string result = "";
+    for (char c : s) {
+        if (c != ' ' || c != '\t') result += c;
+    }
+    return result;
+}
+
+/**
  * @brief Parse source code into vector of line objects.
  * 
  * @param code std::string - Source code.
- * @return std::vector<Line> - The parsed lines of code.
+ * @return std::vector &lt; Line &gt; - The parsed lines of code.
  */
 std::pair<std::vector<std::string>, std::vector<Line>> 
         parseLines(std::string code) 
 {
     code = removeComments(code, '(', ')');
     code = replaceString(code, "\n", "");
-    code = replaceString(code, " ", "");
+    code = removeSpaces(code);
 
     std::pair<std::string, std::vector<std::string>> 
             stringlessPair = removeDemlimStr(code, '"');
@@ -177,11 +193,13 @@ std::pair<std::vector<std::string>, std::vector<Line>>
             std::vector<std::string> parts = splitString(line, delim);
             lineData.pointer = currentReturnPoint;
 
-            if (parts.size() == 2 || parts.size() == 3) {
+            if (parts.size() == 2) {
                 lineData.command = parts[0];
                 lineData.arguments = splitString(parts[1], argdelim);
-            } if (parts.size() == 3) {
-                lineData.arguments = splitString(parts[2], argdelim);
+            } else if (parts.size() == 3) {
+                lineData.command = parts[0];
+                lineData.arguments = splitString(parts[1], argdelim);
+                lineData.returns = splitString(parts[2], argdelim);
             } else {
                 error(n, "Invalid line structure syntax");
             }

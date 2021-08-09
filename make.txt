@@ -1,0 +1,1 @@
+./build.py build clean ; ./bin/basm examples/count.basm

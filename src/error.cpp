@@ -43,11 +43,11 @@ std::string printableVector(std::vector<std::string> sv)
     if (sv.size() == 0) {
         return "[ ]";
     } else if (sv.size() == 1) {
-        return "[ " + sv[0] + " ]";
+        return "[ '" + sv[0] + "' ]";
     } else {
-        std::string out = "[ " + sv[0];
+        std::string out = "[ '" + sv[0] + "'";
         for (int i = 1; i < sv.size(); i++) {
-            out += (", " + sv[i]);
+            out += (", '" + sv[i] + "'");
         }
         return out + " ]";
     }
@@ -66,7 +66,7 @@ void printLines(std::vector<Line> lines)
         std::cout << "  Command: " << lines[i].command << std::endl;
         std::cout << "  Args: " << printableVector(lines[i].arguments)
                 << std::endl;
-        std::cout << "  Args: " << printableVector(lines[i].arguments)
+        std::cout << "  Returns: " << printableVector(lines[i].returns)
                 << std::endl;
     }
 }

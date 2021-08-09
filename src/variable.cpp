@@ -62,7 +62,7 @@ Variable::Variable(std::string strv)
 /**
  * @brief Construct a new Variable with value arrayv and set type to Array 
  * 
- * @param arrayv std::vector<Variable> - Array of variables
+ * @param arrayv std::vector&lt;Variable&gt; - Array of variables
  */
 Variable::Variable(std::vector<Variable> arrayv) 
 {
@@ -116,7 +116,7 @@ void Variable::setString(std::string strv)
 /**
  * @brief Set variable value to arrayv and set type to Array 
  * 
- * @param arrayv std::vector<Variable> - Array of variables
+ * @param arrayv std::vector&lt;Variable&gt; - Array of variables
  */
 void Variable::setArray(std::vector<Variable> arrayv) 
 {
