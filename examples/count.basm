@@ -1,6 +1,5 @@
 ( Count to 100 )
-
-set : 0. : counter ;
+set : 0.0 : counter ;
 add : counter, 1 : counter ;
 !pointer ;
 print : counter, "\n" ;

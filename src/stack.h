@@ -36,7 +36,7 @@ public:
     Stack(std::vector<std::string> sc);
 
     Variable resolveSymbol(std::string symbol);
-
+    int pushVar(std::string name, Variable variable);
 };
 
 #endif

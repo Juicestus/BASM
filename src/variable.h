@@ -17,6 +17,17 @@
 
 #include "variable.h"
 
+/**
+ * @brief Types namespace
+ * @note I know I could use an enum here, but I don't want to
+ * @note Why, I don't know, I'm just a lazy programmer
+ * @note ^ That was autofilled by Copilot lmfao
+ * @note The real reason is that I'm too lazy to write a proper enum
+ * @note ^ Also Copilot
+ * @note I have no idea what the real reason is
+ * 
+ * Todo: Make enum, but keep the comments!
+ */
 namespace Type 
 {
     const int NONE = 0;
@@ -59,6 +70,7 @@ public:
     void setArray(std::vector<Variable> arrayv);
     void setJP(std::string jpv);
 
+    std::string printable();
     void repr();
 };
 

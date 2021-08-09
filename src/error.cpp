@@ -24,7 +24,7 @@
 void error(int n, std::string s) 
 {
     if (n >= 0) {
-        printf("\u001b[31mError: \"%s\" on line %d\u001b[0m\n", s.c_str(), n);
+        printf("\u001b[31mError: \"%s\" on line %d\u001b[0m\n", s.c_str(), n + 1);
     } else {
         printf("\u001b[31mError: \"%s\"\u001b[0m\n", s.c_str());
     }

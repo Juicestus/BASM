@@ -36,6 +36,12 @@ Variable Stack::resolveSymbol(std::string symbol)
     if (symbol.substr(0, STR_REPL.length()) == STR_REPL) {
         int identifier = std::stoi(symbol.substr(STR_REPL.length()));
         return Variable(stringConstants[identifier]);
+    } else if (symbol == "true") {
+        return Variable(true);
+    } else if (symbol == "false") {
+        return Variable(false);
+    } else if (symbol == "null") {
+        return Variable();
     } else if (std::regex_match(symbol, intMatch)) {
         return Variable((long) std::stoi(symbol));
     } else if (std::regex_match(symbol, floatMatch)) {
@@ -50,5 +56,20 @@ Variable Stack::resolveSymbol(std::string symbol)
         } else {
             return Variable();
         }
+    }
+}
+
+int Stack::pushVar(std::string name, Variable variable) {
+    // Check for stuff ig?
+    if (Stack::vars.find(name) != Stack::vars.end()) {
+        if (name[0] == '$') {
+            return -1;
+        } else {
+            Stack::vars[name] = variable;
+            return 0;
+        }
+    } else {
+        Stack::vars[name] = variable;
+        return 0;
     }
 }

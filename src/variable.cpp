@@ -141,6 +141,43 @@ void Variable::setJP(std::string jpv)
 }
 
 /**
+ * @brief Returns a formatted, printable representation of the variable
+ * 
+ * @return std::string - Printable string.
+ */
+std::string Variable::printable()
+{
+    if (Variable::type == Type::NONE) {
+        return "<NoneType>";
+    } else if (Variable::type == Type::BOOL) {
+        return (boolVal) ? "true" : "false"; 
+    } else if (Variable::type == Type::INT) {
+        return std::to_string(intVal);
+    } else if (Variable::type == Type::FLOAT) {
+        return std::to_string(floatVal);
+    } else if (Variable::type == Type::STRING) {
+        return Variable::strVal;
+    } else if (Variable::type == Type::ARRAY) {
+        std::string out = "[ ";
+        for (int i = 0; i < Variable::arrayVal.size(); i++) {
+            out += Variable::arrayVal[i].printable();
+            if (i < Variable::arrayVal.size() - 1) {
+                out += ", ";
+            } else {
+                out += " ]";
+            }
+        }
+        return out;
+    } else if (Variable::type == Type::JUMP) {
+        std::cout << Variable::jpVal << " (JUMP)\n";
+        return "<Jump:" + Variable::jpVal + ">";
+    } else {
+        error(-1, "Unkown variable type in printable");
+        return "";
+    }
+}
+
+/**
  * @brief Prints out a repr for the varaible
  */
 void Variable::repr()
