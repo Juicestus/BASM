@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <regex>
 
 #include "variable.h"
 #include "stack.h"
@@ -35,7 +36,19 @@ Variable Stack::resolveSymbol(std::string symbol)
     if (symbol.substr(0, STR_REPL.length()) == STR_REPL) {
         int identifier = std::stoi(symbol.substr(STR_REPL.length()));
         return Variable(stringConstants[identifier]);
+    } else if (std::regex_match(symbol, intMatch)) {
+        return Variable((long) std::stoi(symbol));
+    } else if (std::regex_match(symbol, floatMatch)) {
+        return Variable(std::stof(symbol));
+    } else if (symbol[0] == '!') {
+        Variable v = Variable();
+        v.setJP(symbol);
+        return v;
     } else {
-        return Variable();
+        if (Stack::vars.find(symbol) != Stack::vars.end()) {
+            return Stack::vars[symbol];
+        } else {
+            return Variable();
+        }
     }
 }

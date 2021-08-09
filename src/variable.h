@@ -25,6 +25,7 @@ namespace Type
     const int FLOAT = 3;
     const int STRING = 4;
     const int ARRAY = 5;
+    const int JUMP = 6;
 }
 
 /**
@@ -33,7 +34,8 @@ namespace Type
  */
 class Variable
 {
-private:
+public:
+
     int type;
 
     bool boolVal;
@@ -41,8 +43,8 @@ private:
     double floatVal;
     std::string strVal;
     std::vector<Variable> arrayVal;
+    std::string jpVal;
 
-public:
     Variable();
     Variable(bool boolv);
     Variable(long int intv);
@@ -55,6 +57,7 @@ public:
     void setFloat(double floatv);
     void setString(std::string strv);
     void setArray(std::vector<Variable> arrayv);
+    void setJP(std::string jpv);
 
     void repr();
 };

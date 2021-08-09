@@ -129,6 +129,20 @@ void Variable::setArray(std::vector<Variable> arrayv)
     Variable::arrayVal = arrayv;
 }
 
+/**
+ * @brief Set variable value to jpv and set type to Jump
+ * 
+ * @param jpv std::vector - Jump pointer
+ */
+void Variable::setJP(std::string jpv)
+{
+    Variable::type = Type::JUMP;
+    Variable::jpVal = jpv;
+}
+
+/**
+ * @brief Prints out a repr for the varaible
+ */
 void Variable::repr()
 {
     if (Variable::type == Type::NONE) {
@@ -148,6 +162,8 @@ void Variable::repr()
             std::cout << ", ";
         }
         std::cout << "] (ARRAY)\n";
+    } else if (Variable::type == Type::JUMP) {
+        std::cout << Variable::jpVal << " (JUMP)\n";
     } else {
         error(-1, "Unkown variable type in repr");
     }

@@ -20,6 +20,17 @@
 #include "stack.h"
 
 /**
+ * @brief Class to contain jump pointers.
+ */
+class JumpPointers
+{
+public:
+    std::vector<std::string> pointers;
+    void addPointer(std::string);
+    int lineOfPointer(std::string);
+};
+
+/**
  * @brief Evaluates the expression.
  * 
  * @param stack Stack - The memory stack object.

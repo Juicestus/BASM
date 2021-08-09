@@ -14,9 +14,17 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <regex>
 
 #include "variable.h"
 #include "parse.h"
+
+const std::string INT_REGEX = "[+-]?[0-9]+";
+//const std::string FLOAT_REGEX = "[+-]?[0-9]+(\\.[0-9]+)?([Ee][+-]?[0-9]+)?";
+const std::string FLOAT_REGEX = "^[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?$";
+
+const std::regex intMatch(INT_REGEX);
+const std::regex floatMatch(FLOAT_REGEX);
 
 class Stack 
 {

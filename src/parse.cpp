@@ -209,11 +209,14 @@ std::pair<std::vector<std::string>, std::vector<Line>>
     return std::make_pair(stringlessPair.second, lines);
 }
 
+// This is the first BASM program ever written
 /*
-set : counter, 0. ;			
-add : counter, 1 : counter ;		
-pointer ;
-print : counter, '\n' ;			
-lteq : counter, 100 : shouldJump ;	
-jump : souldJump, pointer ;
- */
+( Count to 100 )
+
+set : 0. : counter ;
+add : counter, 1 : counter ;
+!pointer ;
+print : counter, "\n" ;
+lteq : counter, 100 : shouldJump ;
+jump : souldJump, !pointer ;
+*/
