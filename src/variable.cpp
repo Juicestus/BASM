@@ -81,7 +81,7 @@ Variable::Variable(std::vector<Variable> arrayv)
  */
 void Variable::setBool(bool boolv) 
 {
-    Variable::type = Type::INT;
+    Variable::type = Type::BOOL;
     Variable::boolVal = boolv;
 }
 

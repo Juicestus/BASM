@@ -22,14 +22,16 @@
 /**
  * @brief Class to contain jump pointers.
  */
+/*
 class JumpPointers
 {
 public:
-    std::vector<std::string> pointers;
-    void addPointer(std::string);
+    //std::vector<std::string> pointers;
+    std::map<std::stirng, int> pointers;
+    void addPointer(std::string, int n);
     int lineOfPointer(std::string);
 };
-
+*/
 /**
  * @brief Evaluates the expression.
  * 

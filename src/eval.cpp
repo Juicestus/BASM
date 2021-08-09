@@ -19,32 +19,6 @@
 #include "eval.h"
 
 /**
- * @brief Add a new pointer to the jump pointers.
- * 
- * @param pointer 
- */
-void JumpPointers::addPointer(std::string pointer) 
-{
-    JumpPointers::pointers.push_back(pointer);
-}
-
-/**
- * @brief Return the index of the searched pointer.
- * 
- * @param pointer 
- * @return int 
- */
-int JumpPointers::lineOfPointer(std::string pointer) 
-{
-    for (int i = 0; i < JumpPointers::pointers.size(); i++) {
-        if (JumpPointers::pointers[i] == pointer) {
-            return i;
-        }
-    }
-    return -1;
-}
-
-/**
  * @brief Evaluates the expression.
  * 
  * @param stack Stack - The memory stack object.
@@ -52,26 +26,24 @@ int JumpPointers::lineOfPointer(std::string pointer)
  */
 void evaluate(Stack stack, std::vector<Line> lines)
 {
-    JumpPointers pointers;
+    std::map<std::string, int> pointers;
 
     for (int n=0; n < lines.size(); n++)
     {
         Line line = lines[n]; 
 
-        pointers.addPointer(line.pointer);
+        pointers[line.pointer] = n;
 
         std::vector<Variable> args;
         for (std::string arg : line.arguments) {
             Variable carg = stack.resolveSymbol(arg);
             if (carg.type == Type::NONE) {
-                //error(n, "Argument '" + arg + "' cannot be resolved");
+                error(n, "Argument '" + arg + "' cannot be resolved");
             }
             args.push_back(carg);
         }
 
-        //for (Variable arg : args) {
-            //arg.repr();
-        //}
+        //for (Variable arg : args) arg.repr();
 
         if (line.command == "") {
             error(n, "No command given");
@@ -96,24 +68,34 @@ void evaluate(Stack stack, std::vector<Line> lines)
          */
         else if (line.command == "add") 
         {
-            bool noFloats = true;
-            float fsum;
+            bool hasFloat = false;
+            long isum = 0;
+            float fsum = 0;
             for (int i=0; i < args.size(); i++) {
                 Variable var = args[i];
                 if (var.type == Type::FLOAT) {
-                    noFloats = false;
+                    hasFloat = true;
+                    fsum = isum;
                     fsum += var.floatVal;
                 } else if (var.type == Type::INT) {
-                    fsum += (float) var.intVal;
+                    if (hasFloat) {
+                        fsum += (float) var.intVal;
+                    } else {
+                        isum += var.intVal;
+                    }
                 } else {
                     error(n, "Argument '" + line.arguments[i] 
                           + "' is not of valid type INT or FLOAT");
                 }
             }
-            if (noFloats) {
-                stack.pushVar(line.returns[0], (long) fsum);
+            if (hasFloat) {
+                // idk even know if the variable constructor is required
+                // it might construct in parameter call
+                //stack.pushVar(line.returns[0], Variable((long) fsum));
+                stack.pushVar(line.returns[0], Variable(fsum));
             } else {
-                stack.pushVar(line.returns[0], fsum);
+                //stack.pushVar(line.returns[0], Variable(fsum));
+                stack.pushVar(line.returns[0], Variable(isum));
             }
         }
 
@@ -126,10 +108,10 @@ void evaluate(Stack stack, std::vector<Line> lines)
             if (args[0].type == Type::BOOL
                 && args[1].type == Type::JUMP) {
                 if (args[0].boolVal) {
-                    n = pointers.lineOfPointer(args[1].jpVal) - 1;
+                    n = pointers[args[1].jpVal] - 1;
                 }
             } else {
-                error(n, "Either non valid boolean or jump/goto pointer!");
+                error(n, "Either non valid boolean or jump/goto pointer");
             }
         }
 
@@ -143,6 +125,39 @@ void evaluate(Stack stack, std::vector<Line> lines)
                 output += args[i].printable();
             }
             std::cout << output;
+        }
+
+        /**
+         * @brief lteq function
+         * Sets only return bool to the less than or equal operation
+         * between the first two args, ints or floats.
+         */
+        else if (line.command == "lteq") {
+            if (args.size() == 2) {
+                float firstVal;
+                float secondVal;
+
+                if (args[0].type == Type::INT) {
+                    firstVal = (float) args[0].intVal;
+                } else if (args[0].type == Type::FLOAT) {
+                    firstVal = args[0].floatVal;
+                } else {
+                    error(n, "Argument 1 not valid numberical type");
+                }
+
+                if (args[1].type == Type::INT) {
+                    secondVal = (float) args[1].intVal;
+                } else if (args[1].type == Type::FLOAT) {
+                    secondVal = args[1].floatVal;
+                } else {
+                    error(n, "Argument 2 not valid numberical type");
+                }
+
+                bool opresult = firstVal <= secondVal;
+                stack.pushVar(line.returns[0], Variable(opresult));
+            } else {
+                error(n, "Invalid ammount of arguments");
+            }
         }
     }
 }

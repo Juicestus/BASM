@@ -1,7 +1,7 @@
 ( Count to 100 )
-set : 0.0 : counter ;
-add : counter, 1 : counter ;
+set : 0 : counter ;
 !pointer ;
+add : counter, 1 : counter ;
 print : counter, "\n" ;
-lteq : counter, 100 : shouldJump ;
-jump : souldJump, !pointer ;
+lteq : counter, 99 : shouldJump ;
+jump : shouldJump, !pointer ;

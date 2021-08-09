@@ -136,7 +136,11 @@ std::pair<std::string, std::vector<std::string>>
         }
         prevChar = s[i];
     }
-    return std::make_pair(stringless, removedStrings);
+    std::vector<std::string> removedStringsEC;
+    for (std::string s : removedStrings) {
+        removedStringsEC.push_back(replaceString(s, "\\n", "\n"));
+    }
+    return std::make_pair(stringless, removedStringsEC);
 }
 
 /**
@@ -212,11 +216,10 @@ std::pair<std::vector<std::string>, std::vector<Line>>
 // This is the first BASM program ever written
 /*
 ( Count to 100 )
-
-set : 0. : counter ;
-add : counter, 1 : counter ;
+set : 0 : counter ;
 !pointer ;
+add : counter, 1 : counter ;
 print : counter, "\n" ;
-lteq : counter, 100 : shouldJump ;
-jump : souldJump, !pointer ;
+lteq : counter, 99 : shouldJump ;
+jump : shouldJump, !pointer ;
 */
