@@ -23,7 +23,7 @@
  * @brief Evaluates the expression.
  * 
  * @param stack Stack - The memory stack object.
- * @param lines std::vector<Line> - The parse expression lines.
+ * @param lines std::vector&lt;Line&gt; - The parse expression lines.
  */
 void evaluate(Stack stack, std::vector<Line> linse);
 

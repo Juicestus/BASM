@@ -18,7 +18,7 @@
 /**
  * @brief Construct a new Stack object with stored strings.
  * 
- * @param sc std::vector<std::string> - String constants vector
+ * @param sc std::vector&lt;std::string&gt; - String constants vector
  */
 Stack::Stack(std::vector<std::string> sc) {
     Stack::stringConstants = sc;
