@@ -1,7 +1,8 @@
+#!/usr/bin/env basm
 ( Count to 100 )
-set : 0 : counter ;
-!pointer ;
-add : counter, 1 : counter ;
-print : counter, "\n" ;
-lteq : counter, 99 : shouldJump ;
-jump : shouldJump, !pointer ;
+set: 0 : counter;
+!pointer;
+add: counter, 1: counter;
+print: counter, "\n";
+lteq: counter, 9999: shouldJump;
+jump: shouldJump, !pointer;

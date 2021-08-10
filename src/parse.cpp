@@ -167,15 +167,16 @@ std::string removeSpaces(std::string s)
 std::pair<std::vector<std::string>, std::vector<Line>> 
         parseLines(std::string code) 
 {
-    code = removeComments(code, '(', ')');
-    code = replaceString(code, "\n", "");
-    code = removeSpaces(code);
-
     std::pair<std::string, std::vector<std::string>> 
             stringlessPair = removeDemlimStr(code, '"');
 
     std::string stringless = stringlessPair.first;
 
+    stringless = removeComments(stringless, '#', '\n');
+    stringless = removeComments(stringless, '(', ')');
+    stringless = replaceString(stringless, "\n", "");
+
+    stringless = removeSpaces(stringless);
     std::vector<std::string> rawLines = splitString(stringless, ';');
     std::vector<Line> lines;
 
@@ -214,6 +215,7 @@ std::pair<std::vector<std::string>, std::vector<Line>>
 }
 
 // This is the first BASM program ever written
+// Do not delete this comment please
 /*
 ( Count to 100 )
 set : 0 : counter ;

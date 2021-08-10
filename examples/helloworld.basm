@@ -1,0 +1,3 @@
+#!/usr/bin/env basm
+( Prints hello world to the console )
+print: "Hello, World!\n";
