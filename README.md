@@ -9,7 +9,14 @@ BASM consists of many improvments off previous language K0D3 which make it just 
 
 ## Install
 
-In the `dist` directory there are two directories (macOS and win64) with the binaries for each operating system. No installer yet. Current version is Alpha 0.8.
+Check the releases tab on GitHub and isntall the zipped binary for your operating system.\
+Current built operating systems:
+* MacOS Big Sur - basm-macos-v0.8-alpha
+* Windows 10 64 bit - basm-win64-v0.8-alpha
+
+(Windows builds made with MinGW)
+
+Releases are also in the `dist` directory. There are two directories, macOS and win64, with the zipped and exposed binaries for each operating system.
 
 ### Build from source
 
