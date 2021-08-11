@@ -2,7 +2,7 @@
  * @file parse.h
  * @author Justus Languell (jus@gtsbr.org)
  * @brief Header for functions to parse the code into usable representation.
- * @version 0.2
+ * @version 0.3
  * @date 2021-08-08
  * 
  * @copyright Copyright (c) 2021

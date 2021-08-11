@@ -26,10 +26,14 @@ BIN = 'basm'
 # '<extension'> : ('<compiler>', '<args'>),
 COMPILERS = {
     'c' : ('gcc', ''),
-    'cpp': ('g++', '-std=c++20'),
+    'cc': ('g++', '-std=c++20'),
 }
 
 if __name__ == '__main__':
+
+    if 'mingw' in sys.argv:
+        COMPILERS['cc'] = ('g++', '-std=c++17')
+
 
     if 'new' in sys.argv:
         if not os.path.isdir(SRC_DIR):

@@ -1,5 +1,5 @@
 /**
- * @file read.cpp
+ * @file read.cc
  * @author Justus Languell (jus@gtsbr.org)
  * @brief Contains function to read file contents.
  * @version 0.1

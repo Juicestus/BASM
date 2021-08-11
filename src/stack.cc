@@ -1,5 +1,5 @@
 /**
- * @file stack.cpp
+ * @file stack.cc
  * @author Justus Languell (jus@gtsbr.org)
  * @brief The memory stack and symbol resolver.
  * @version 0.1

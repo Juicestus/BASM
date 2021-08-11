@@ -1,5 +1,5 @@
 /**
- * @file variable.cpp
+ * @file variable.cc
  * @author Justus Languell jus@gtsbr.org
  * @brief Implemnents the Variable class
  * @version 0.1

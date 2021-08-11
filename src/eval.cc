@@ -1,11 +1,13 @@
 /**
- * @file eval.cpp
+ * @file eval.cc
  * @author Justus Languell (jus@gtsbr.org)
  * @brief Evaluates the expressions.
- * @version 0.1
+ * @version 0.4
  * @date 2021-08-09
  * 
  * @copyright Copyright (c) 2021
+ * 
+ * Sorry for a 800+ line file (: 
  */
 
 #include <string>

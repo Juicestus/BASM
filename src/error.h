@@ -2,7 +2,7 @@
  * @file strutils.h
  * @author Justus Languell (jus@gtsbr.org)
  * @brief Header for string utilities used across the codebase.
- * @version 0.1
+ * @version 0.2
  * @date 2021-08-07
  * 
  * @copyright Copyright (c) 2021

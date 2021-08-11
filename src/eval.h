@@ -2,7 +2,7 @@
  * @file eval.h
  * @author Justus Languell (jus@gtsbr.org)
  * @brief Header for evaluation functions.
- * @version 0.1
+ * @version 0.4
  * @date 2021-08-09
  * 
  * @copyright Copyright (c) 2021

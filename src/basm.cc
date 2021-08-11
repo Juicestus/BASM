@@ -1,5 +1,5 @@
 /**
- * @file basm.cpp
+ * @file basm.cc
  * @author Justus Languell (jus@gtsbr.org)
  * @brief 
  * @version 0.1
