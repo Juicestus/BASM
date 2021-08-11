@@ -14,7 +14,9 @@ Current built operating systems:
 * MacOS Big Sur - basm-macos-v0.8-alpha
 * Windows 10 64 bit - basm-win64-v0.8-alpha
 
-(Windows builds made with MinGW)
+Do what you need to do to put the binary in a spot where it can be globally accessed in your perfered terminal environment.
+
+Note: Windows builds made with MinGW GNU C/C++, not with MSVC++.
 
 Releases are also in the `dist` directory. There are two directories, macOS and win64, with the zipped and exposed binaries for each operating system.
 
