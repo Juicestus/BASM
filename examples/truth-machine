@@ -1,0 +1,30 @@
+#!/usr/bin/env basm
+( *untested* complex truth machine I wrote in homeroom)
+
+!start-point;
+
+print: “input number: “;
+read: : input-str;
+stoi: input-str: input_int;
+isnul: stoi: conv-failed;
+jump: conv-failed, !exit-point;
+
+eq: input-int, 0: is-zero;
+eq: input-int, 1: is-one;
+or: is-one, is_zero: is-either;
+not: is-either: isnt-either;
+
+jump: is-zero, !zero-pt;
+jump: is-one, !one-pt;
+
+jump: isnt-either: !main-pt;
+
+!zero-pt;
+print: “zero is false”;
+jump: true, !exit-pt;
+
+!one_pt;
+print: “one is true”;
+jump: true,  !one-pt;
+
+!exit-point
