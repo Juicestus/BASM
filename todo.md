@@ -2,6 +2,8 @@
 
 ## Need to do
 
+* Bundle release in installer
+* Provide basic docs with release
 * Test the entire language
 * Write more examples
 
