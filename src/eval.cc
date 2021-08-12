@@ -31,17 +31,19 @@ void evaluate(Stack stack, std::vector<Line> lines)
 {
     std::map<std::string, int> pointers;
 
+    for (int n=0; n < lines.size(); n++) {
+        pointers[lines[n].pointer] = n;
+    }
+
     for (int n=0; n < lines.size(); n++)
     {
         Line line = lines[n]; 
-
-        pointers[line.pointer] = n;
-
+        
         std::vector<Variable> args;
         for (std::string arg : line.arguments) {
             Variable carg = stack.resolveSymbol(arg);
             if (carg.type == Type::NONE) {
-                error(n, "Argument '" + arg + "' cannot be resolved");
+                error(line.lineNumber, "Argument '" + arg + "' cannot be resolved");
             }
             args.push_back(carg);
         }
@@ -50,15 +52,15 @@ void evaluate(Stack stack, std::vector<Line> lines)
 
         if (line.command == "") 
         {
-            error(n, "No command given");
+            error(line.lineNumber, "No command given");
         }
 
         /* FLOW CONTROL */
 
         /**
-         * @brief Jump function
+         * @brief jump function
          * Takes in two args, boolean to jump or not, and 
-         * goto pointer. Jumps to the goto pointer.
+         * goto pointer. Jumps to the goto pointer if bool is true.
          */
         else if (line.command == "jump") 
         {
@@ -68,7 +70,49 @@ void evaluate(Stack stack, std::vector<Line> lines)
                     n = pointers[args[1].jpVal] - 1;
                 }
             } else {
-                error(n, "Either non valid boolean or jump/goto pointer");
+                error(line.lineNumber, "Either non valid boolean or jump/goto pointer");
+            }
+        }
+
+        /**
+         * @brief jumpn function
+         * Takes in two args, boolean to jump or not, and 
+         * goto pointer. Jumps to the goto pointer if bool is false.
+         */
+        else if (line.command == "jumpn") 
+        {
+            if (args[0].type == Type::BOOL
+                && args[1].type == Type::JUMP) {
+                if (!args[0].boolVal) {
+                    n = pointers[args[1].jpVal] - 1;
+                }
+            } else {
+                error(line.lineNumber, "Either non valid boolean or jump/goto pointer");
+            }
+        }
+
+        /**
+         * @brief exit function
+         * Exits the program with given exit code
+         */
+        else if (line.command == "exit") {
+            if (args.size() == 1) {
+                int exitCode;
+
+                if (args[0].type == Type::INT) {
+                    exitCode = args[0].intVal;
+                } else {
+                    error(line.lineNumber, "Argument 1 not valid string type");
+                }
+
+                if (exitCode == 0 || exitCode == 1) {
+                    exit(exitCode);
+                } else {
+                    error(line.lineNumber, "Argument 1 not valid exit code (0/1)");
+                }
+                 
+            } else {
+                error(line.lineNumber, "Invalid ammount of arguments");
             }
         }
 
@@ -93,8 +137,8 @@ void evaluate(Stack stack, std::vector<Line> lines)
          */
         else if (line.command == "read")
         {
-            if (line.returns.size() == 0) {
-                error(n, "Invalid ammount of returns");
+            if (line.returns.size() != 1) {
+                error(line.lineNumber, "Invalid ammount of returns in read command");
             }
 
             std::string input;
@@ -103,7 +147,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
             if (args.size() == 1) {
                 stack.pushVar(line.returns[0], Variable(input));
             } else {
-                error(n, "Invalid ammount of arguments");
+                error(line.lineNumber, "Invalid ammount of arguments");
             }
         }
 
@@ -116,13 +160,13 @@ void evaluate(Stack stack, std::vector<Line> lines)
          */
         else if (line.command == "isnul") {
             if (line.returns.size() == 0) {
-                error(n, "Invalid ammount of returns");
+                error(line.lineNumber, "Invalid ammount of returns");
             }
 
             if (args.size() == 1) {
                 stack.pushVar(line.returns[0], Variable(args[0].type == Type::NONE));
             } else {
-                error(n, "Invalid ammount of arguments");
+                error(line.lineNumber, "Invalid ammount of arguments");
             }
         }
 
@@ -132,13 +176,13 @@ void evaluate(Stack stack, std::vector<Line> lines)
          */
         else if (line.command == "type") {
             if (line.returns.size() == 0) {
-                error(n, "Invalid ammount of returns");
+                error(line.lineNumber, "Invalid ammount of returns");
             }
 
             if (args.size() == 1) {
                 stack.pushVar(line.returns[0], Variable((long) args[0].type));
             } else {
-                error(n, "Invalid ammount of arguments");
+                error(line.lineNumber, "Invalid ammount of arguments");
             }
         }
 
@@ -149,26 +193,28 @@ void evaluate(Stack stack, std::vector<Line> lines)
          */
         else if (line.command == "stoi") {
             if (line.returns.size() == 0) {
-                error(n, "Invalid ammount of returns");
+                error(line.lineNumber, "Invalid ammount of returns");
             }
+
 
             if (args.size() == 1) {
                 std::string strval;
+                std::cout << strval + "\n";
 
                 if (args[0].type == Type::STRING) {
                     strval = args[0].strVal;
                 } else {
-                    error(n, "Argument 1 not valid string type");
+                    error(line.lineNumber, "Argument 1 not valid string type");
                 }
 
                 try {
                     stack.pushVar(line.returns[0], Variable((long) std::stoi(strval)));
                 } catch (...) {
                     stack.pushVar(line.returns[0], Variable());
-                    //error(n, "Argument 1 not valid integer");
+                    //error(line.lineNumber, "Argument 1 not valid integer");
                 }
             } else {
-                error(n, "Invalid ammount of arguments");
+                error(line.lineNumber, "Invalid ammount of arguments");
             }
         }
 
@@ -179,7 +225,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
          */
         else if (line.command == "stof") {
             if (line.returns.size() == 0) {
-                error(n, "Invalid ammount of returns");
+                error(line.lineNumber, "Invalid ammount of returns");
             }
 
             if (args.size() == 1) {
@@ -188,17 +234,17 @@ void evaluate(Stack stack, std::vector<Line> lines)
                 if (args[0].type == Type::STRING) {
                     strval = args[0].strVal;
                 } else {
-                    error(n, "Argument 1 not valid string type");
+                    error(line.lineNumber, "Argument 1 not valid string type");
                 }
 
                 try {
                     stack.pushVar(line.returns[0], Variable(std::stof(strval)));
                 } catch (...) {
                     stack.pushVar(line.returns[0], Variable());
-                    //error(n, "Argument 1 not valid integer");
+                    //error(line.lineNumber, "Argument 1 not valid integer");
                 }
             } else {
-                error(n, "Invalid ammount of arguments");
+                error(line.lineNumber, "Invalid ammount of arguments");
             }
         }
 
@@ -212,7 +258,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
          */
         else if (line.command == "set") {
             if (line.returns.size() == 0) {
-                error(n, "Invalid ammount of returns");
+                error(line.lineNumber, "Invalid ammount of returns");
             }
 
             stack.pushVar(line.returns[0], args[0]);
@@ -229,7 +275,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
         else if (line.command == "sum") 
         {
             if (line.returns.size() == 0) {
-                error(n, "Invalid ammount of returns");
+                error(line.lineNumber, "Invalid ammount of returns");
             }
 
             bool hasFloat = false;
@@ -248,7 +294,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
                         isum += var.intVal;
                     }
                 } else {
-                    error(n, "Argument '" + line.arguments[i] 
+                    error(line.lineNumber, "Argument '" + line.arguments[i] 
                           + "' is not of valid type INT or FLOAT");
                 }
             }
@@ -270,7 +316,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
         else if (line.command == "add") 
         {
             if (line.returns.size() == 0) {
-                error(n, "Invalid ammount of returns");
+                error(line.lineNumber, "Invalid ammount of returns");
             }
 
             if (args.size() == 2) {
@@ -281,10 +327,10 @@ void evaluate(Stack stack, std::vector<Line> lines)
                                 || two.type == Type::FLOAT);
 
                 if (one.type != Type::INT && one.type != Type::FLOAT) {
-                    error(n, "First Addition argument invalid type!");
+                    error(line.lineNumber, "First Addition argument invalid type!");
                 }
                 if (two.type != Type::INT && two.type != Type::FLOAT) {
-                    error(n, "Second Addition argument invalid type!");
+                    error(line.lineNumber, "Second Addition argument invalid type!");
                 }
 
                 if (isFloat) {
@@ -303,7 +349,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
         else if (line.command == "sub") 
         {
             if (line.returns.size() == 0) {
-                error(n, "Invalid ammount of returns");
+                error(line.lineNumber, "Invalid ammount of returns");
             }
 
             if (args.size() == 2) {
@@ -314,10 +360,10 @@ void evaluate(Stack stack, std::vector<Line> lines)
                                 || two.type == Type::FLOAT);
 
                 if (one.type != Type::INT && one.type != Type::FLOAT) {
-                    error(n, "First Subtraction argument invalid type!");
+                    error(line.lineNumber, "First Subtraction argument invalid type!");
                 }
                 if (two.type != Type::INT && two.type != Type::FLOAT) {
-                    error(n, "Second Subtraction argument invalid type!");
+                    error(line.lineNumber, "Second Subtraction argument invalid type!");
                 }
 
                 if (isFloat) {
@@ -335,7 +381,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
         else if (line.command == "mult") 
         {
             if (line.returns.size() == 0) {
-                error(n, "Invalid ammount of returns");
+                error(line.lineNumber, "Invalid ammount of returns");
             }
 
             Variable one = args[0];
@@ -345,10 +391,10 @@ void evaluate(Stack stack, std::vector<Line> lines)
                             || two.type == Type::FLOAT);
 
             if (one.type != Type::INT && one.type != Type::FLOAT) {
-                error(n, "First Mutliplication argument invalid type!");
+                error(line.lineNumber, "First Mutliplication argument invalid type!");
             }
             if (two.type != Type::INT && two.type != Type::FLOAT) {
-                error(n, "Second Mutliplication argument invalid type!");
+                error(line.lineNumber, "Second Mutliplication argument invalid type!");
             }
 
             if (isFloat) {
@@ -376,10 +422,10 @@ void evaluate(Stack stack, std::vector<Line> lines)
                                 || two.type == Type::FLOAT);
 
                 if (one.type != Type::INT && one.type != Type::FLOAT) {
-                    error(n, "First Division argument invalid type!");
+                    error(line.lineNumber, "First Division argument invalid type!");
                 }
                 if (two.type != Type::INT && two.type != Type::FLOAT) {
-                    error(n, "Second Division argument invalid type!");
+                    error(line.lineNumber, "Second Division argument invalid type!");
                 }
 
                 if (isFloat) {
@@ -398,7 +444,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
         else if (line.command == "mod") 
         {
             if (line.returns.size() == 0) {
-                error(n, "Invalid ammount of returns");
+                error(line.lineNumber, "Invalid ammount of returns");
             }
 
             if (args.size() == 2) {
@@ -409,10 +455,10 @@ void evaluate(Stack stack, std::vector<Line> lines)
                                 || two.type == Type::FLOAT);
 
                 if (one.type != Type::INT && one.type != Type::FLOAT) {
-                    error(n, "First Modulo argument invalid type!");
+                    error(line.lineNumber, "First Modulo argument invalid type!");
                 }
                 if (two.type != Type::INT && two.type != Type::FLOAT) {
-                    error(n, "Second Modulo argument invalid type!");
+                    error(line.lineNumber, "Second Modulo argument invalid type!");
                 }
 
                 if (isFloat) {
@@ -430,7 +476,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
         else if (line.command == "pow") 
         {
             if (line.returns.size() == 0) {
-                error(n, "Invalid ammount of returns");
+                error(line.lineNumber, "Invalid ammount of returns");
             }
 
             if (args.size() == 2) {
@@ -441,10 +487,10 @@ void evaluate(Stack stack, std::vector<Line> lines)
                                 || two.type == Type::FLOAT);
 
                 if (one.type != Type::INT && one.type != Type::FLOAT) {
-                    error(n, "First Power argument invalid type!");
+                    error(line.lineNumber, "First Power argument invalid type!");
                 }
                 if (two.type != Type::INT && two.type != Type::FLOAT) {
-                    error(n, "Second Power argument invalid type!");
+                    error(line.lineNumber, "Second Power argument invalid type!");
                 }
 
                 if (isFloat) {
@@ -464,7 +510,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
         else if (line.command == "not") 
         {
             if (line.returns.size() == 0) {
-                error(n, "Invalid ammount of returns");
+                error(line.lineNumber, "Invalid ammount of returns");
             }
 
             if (args.size() == 1) {
@@ -473,12 +519,12 @@ void evaluate(Stack stack, std::vector<Line> lines)
                 if (args[0].type == Type::BOOL) {
                     val = args[0].boolVal;
                 } else {
-                    error(n, "Argument 1 not valid numberical type");
+                    error(line.lineNumber, "Argument 1 not valid boolena type");
                 }
 
                 stack.pushVar(line.returns[0], Variable(!val));
             } else {
-                error(n, "Invalid ammount of arguments");
+                error(line.lineNumber, "Invalid ammount of arguments");
             }
         }
 
@@ -489,7 +535,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
         else if (line.command == "or") 
         {
             if (line.returns.size() == 0) {
-                error(n, "Invalid ammount of returns");
+                error(line.lineNumber, "Invalid ammount of returns");
             }
 
             if (args.size() == 2) {
@@ -499,18 +545,18 @@ void evaluate(Stack stack, std::vector<Line> lines)
                 if (args[0].type == Type::BOOL) {
                     val1 = args[0].boolVal;
                 } else {
-                    error(n, "Argument 1 not valid numberical type");
+                    error(line.lineNumber, "Argument 1 not valid boolena type");
                 }
 
-                if (args[0].type == Type::BOOL) {
-                    val2 = args[0].boolVal;
+                if (args[1].type == Type::BOOL) {
+                    val2 = args[1].boolVal;
                 } else {
-                    error(n, "Argument 2 not valid numberical type");
+                    error(line.lineNumber, "Argument 2 not valid boolena type");
                 }
 
                 stack.pushVar(line.returns[0], Variable(val1 || val2));
             } else {
-                error(n, "Invalid ammount of arguments");
+                error(line.lineNumber, "Invalid ammount of arguments");
             }
         }
 
@@ -521,7 +567,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
         else if (line.command == "and") 
         {
             if (line.returns.size() == 0) {
-                error(n, "Invalid ammount of returns");
+                error(line.lineNumber, "Invalid ammount of returns");
             }
 
             if (args.size() == 2) {
@@ -531,18 +577,18 @@ void evaluate(Stack stack, std::vector<Line> lines)
                 if (args[0].type == Type::BOOL) {
                     val1 = args[0].boolVal;
                 } else {
-                    error(n, "Argument 1 not valid numberical type");
+                    error(line.lineNumber, "Argument 1 not valid boolena type");
                 }
 
-                if (args[0].type == Type::BOOL) {
-                    val2 = args[0].boolVal;
+                if (args[1].type == Type::BOOL) {
+                    val2 = args[1].boolVal;
                 } else {
-                    error(n, "Argument 2 not valid numberical type");
+                    error(line.lineNumber, "Argument 2 not valid boolena type");
                 }
 
                 stack.pushVar(line.returns[0], Variable(val1 && val2));
             } else {
-                error(n, "Invalid ammount of arguments");
+                error(line.lineNumber, "Invalid ammount of arguments");
             }
         }
 
@@ -556,7 +602,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
         else if (line.command == "eq") 
         {
             if (line.returns.size() == 0) {
-                error(n, "Invalid ammount of returns");
+                error(line.lineNumber, "Invalid ammount of returns");
             }
 
             if (args.size() == 2) {
@@ -568,7 +614,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
                 } else if (args[0].type == Type::FLOAT) {
                     firstVal = args[0].floatVal;
                 } else {
-                    error(n, "Argument 1 not valid numberical type");
+                    error(line.lineNumber, "Argument 1 not valid numerical type");
                 }
 
                 if (args[1].type == Type::INT) {
@@ -576,13 +622,13 @@ void evaluate(Stack stack, std::vector<Line> lines)
                 } else if (args[1].type == Type::FLOAT) {
                     secondVal = args[1].floatVal;
                 } else {
-                    error(n, "Argument 2 not valid numberical type");
+                    error(line.lineNumber, "Argument 2 not valid numerical type");
                 }
 
                 bool opresult = firstVal == secondVal;
                 stack.pushVar(line.returns[0], Variable(opresult));
             } else {
-                error(n, "Invalid ammount of arguments");
+                error(line.lineNumber, "Invalid ammount of arguments");
             }
         }
 
@@ -594,7 +640,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
         else if (line.command == "lt") 
         {
             if (line.returns.size() == 0) {
-                error(n, "Invalid ammount of returns");
+                error(line.lineNumber, "Invalid ammount of returns");
             }
 
             if (args.size() == 2) {
@@ -606,7 +652,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
                 } else if (args[0].type == Type::FLOAT) {
                     firstVal = args[0].floatVal;
                 } else {
-                    error(n, "Argument 1 not valid numberical type");
+                    error(line.lineNumber, "Argument 1 not valid numerical type");
                 }
 
                 if (args[1].type == Type::INT) {
@@ -614,13 +660,13 @@ void evaluate(Stack stack, std::vector<Line> lines)
                 } else if (args[1].type == Type::FLOAT) {
                     secondVal = args[1].floatVal;
                 } else {
-                    error(n, "Argument 2 not valid numberical type");
+                    error(line.lineNumber, "Argument 2 not valid numerical type");
                 }
 
                 bool opresult = firstVal < secondVal;
                 stack.pushVar(line.returns[0], Variable(opresult));
             } else {
-                error(n, "Invalid ammount of arguments");
+                error(line.lineNumber, "Invalid ammount of arguments");
             }
         }
 
@@ -632,7 +678,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
         else if (line.command == "gt") 
         {
             if (line.returns.size() == 0) {
-                error(n, "Invalid ammount of returns");
+                error(line.lineNumber, "Invalid ammount of returns");
             }
 
             if (args.size() == 2) {
@@ -644,7 +690,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
                 } else if (args[0].type == Type::FLOAT) {
                     firstVal = args[0].floatVal;
                 } else {
-                    error(n, "Argument 1 not valid numberical type");
+                    error(line.lineNumber, "Argument 1 not valid numerical type");
                 }
 
                 if (args[1].type == Type::INT) {
@@ -652,13 +698,13 @@ void evaluate(Stack stack, std::vector<Line> lines)
                 } else if (args[1].type == Type::FLOAT) {
                     secondVal = args[1].floatVal;
                 } else {
-                    error(n, "Argument 2 not valid numberical type");
+                    error(line.lineNumber, "Argument 2 not valid numerical type");
                 }
 
                 bool opresult = firstVal > secondVal;
                 stack.pushVar(line.returns[0], Variable(opresult));
             } else {
-                error(n, "Invalid ammount of arguments");
+                error(line.lineNumber, "Invalid ammount of arguments");
             }
         }
 
@@ -670,7 +716,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
         else if (line.command == "lteq") 
         {
             if (line.returns.size() == 0) {
-                error(n, "Invalid ammount of returns");
+                error(line.lineNumber, "Invalid ammount of returns");
             }
 
             if (args.size() == 2) {
@@ -682,7 +728,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
                 } else if (args[0].type == Type::FLOAT) {
                     firstVal = args[0].floatVal;
                 } else {
-                    error(n, "Argument 1 not valid numberical type");
+                    error(line.lineNumber, "Argument 1 not valid numerical type");
                 }
 
                 if (args[1].type == Type::INT) {
@@ -690,13 +736,13 @@ void evaluate(Stack stack, std::vector<Line> lines)
                 } else if (args[1].type == Type::FLOAT) {
                     secondVal = args[1].floatVal;
                 } else {
-                    error(n, "Argument 2 not valid numberical type");
+                    error(line.lineNumber, "Argument 2 not valid numerical type");
                 }
 
                 bool opresult = firstVal <= secondVal;
                 stack.pushVar(line.returns[0], Variable(opresult));
             } else {
-                error(n, "Invalid ammount of arguments");
+                error(line.lineNumber, "Invalid ammount of arguments");
             }
         }
 
@@ -708,7 +754,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
         else if (line.command == "gteq") 
         {
             if (line.returns.size() == 0) {
-                error(n, "Invalid ammount of returns");
+                error(line.lineNumber, "Invalid ammount of returns");
             }
 
             if (args.size() == 2) {
@@ -720,7 +766,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
                 } else if (args[0].type == Type::FLOAT) {
                     firstVal = args[0].floatVal;
                 } else {
-                    error(n, "Argument 1 not valid numberical type");
+                    error(line.lineNumber, "Argument 1 not valid numerical type");
                 }
 
                 if (args[1].type == Type::INT) {
@@ -728,13 +774,13 @@ void evaluate(Stack stack, std::vector<Line> lines)
                 } else if (args[1].type == Type::FLOAT) {
                     secondVal = args[1].floatVal;
                 } else {
-                    error(n, "Argument 2 not valid numberical type");
+                    error(line.lineNumber, "Argument 2 not valid numerical type");
                 }
 
                 bool opresult = firstVal >= secondVal;
                 stack.pushVar(line.returns[0], Variable(opresult));
             } else {
-                error(n, "Invalid ammount of arguments");
+                error(line.lineNumber, "Invalid ammount of arguments");
             }
         }
 
@@ -747,7 +793,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
         else if (line.command == "streq") 
         {
             if (line.returns.size() == 0) {
-                error(n, "Invalid ammount of returns");
+                error(line.lineNumber, "Invalid ammount of returns");
             }
 
             if (args.size() == 2) {
@@ -757,26 +803,26 @@ void evaluate(Stack stack, std::vector<Line> lines)
                 if (args[0].type == Type::STRING) {
                     firstVal = args[0].strVal;
                 } else {
-                    error(n, "Argument 1 not valid string type");
+                    error(line.lineNumber, "Argument 1 not valid string type");
                 }
 
                 if (args[1].type == Type::STRING) {
                     secondVal = args[1].strVal;
                 } else {
-                    error(n, "Argument 2 not valid string type");
+                    error(line.lineNumber, "Argument 2 not valid string type");
                 }
 
                 bool opresult = firstVal == secondVal;
                 stack.pushVar(line.returns[0], Variable(opresult));
             } else {
-                error(n, "Invalid ammount of arguments");
+                error(line.lineNumber, "Invalid ammount of arguments");
             }
         }
 
         else if (line.command == "charat") 
         {
             if (line.returns.size() == 0) {
-                error(n, "Invalid ammount of returns");
+                error(line.lineNumber, "Invalid ammount of returns");
             }
 
             if (args.size() == 2) {
@@ -786,19 +832,19 @@ void evaluate(Stack stack, std::vector<Line> lines)
                 if (args[0].type == Type::STRING) {
                     firstVal = args[0].strVal;
                 } else {
-                    error(n, "Argument 1 not valid string type");
+                    error(line.lineNumber, "Argument 1 not valid string type");
                 }
 
                 if (args[1].type == Type::INT) {
                     secondVal = args[1].intVal;
                 } else {
-                    error(n, "Argument 2 not valid int type");
+                    error(line.lineNumber, "Argument 2 not valid int type");
                 }
 
                 stack.pushVar(line.returns[0], Variable(
                     std::to_string(firstVal[secondVal])));
             } else {
-                error(n, "Invalid ammount of arguments");
+                error(line.lineNumber, "Invalid ammount of arguments");
             }
         }
 
@@ -814,7 +860,7 @@ void evaluate(Stack stack, std::vector<Line> lines)
         else if (line.command == "cat") 
         {
             if (line.returns.size() == 0) {
-                error(n, "Invalid ammount of returns");
+                error(line.lineNumber, "Invalid ammount of returns");
             }
 
             std::string result;

@@ -159,6 +159,33 @@ std::string removeSpaces(std::string s)
 }
 
 /**
+ * @brief Wtf? Gets line numbers of semicolons?
+ * Currently only an estimation (:
+ * 
+ * @param s std::stirng - Uncut code
+ * @return std::vector&lt;std::pair&lt;int, int&gt;&gt;
+ */
+std::vector<int> lineNumberer(std::string s)
+{
+    std::vector<int> lineNumbers;
+    int lines = 0;
+    bool hasColon = false;
+
+    for (char c : s) {
+        if (c == '\n') {
+            lines++;
+            hasColon = false;
+        }
+        if (c == ';' && hasColon) {
+            lineNumbers.push_back(lines);
+        }
+        if (c == ':') hasColon = true; 
+    }
+
+    return lineNumbers;
+}
+
+/**
  * @brief Parse source code into vector of line objects.
  * 
  * @param code std::string - Source code.
@@ -172,6 +199,8 @@ std::pair<std::vector<std::string>, std::vector<Line>>
 
     std::string stringless = stringlessPair.first;
 
+    std::vector<int> lineNumbers = lineNumberer(stringless);
+
     stringless = removeComments(stringless, '#', '\n');
     stringless = removeComments(stringless, '(', ')');
     stringless = replaceString(stringless, "\n", "");
@@ -183,6 +212,8 @@ std::pair<std::vector<std::string>, std::vector<Line>>
     char delim = ':';
     char argdelim = ',';
     std::string currentReturnPoint = "";
+    int actualLineNumberPos = 0;
+
     for (int n = 0; n < rawLines.size(); n++) 
     {
         std::string line = rawLines[n];
@@ -195,7 +226,8 @@ std::pair<std::vector<std::string>, std::vector<Line>>
         } else {
             std::vector<std::string> parts = splitString(line, delim);
             lineData.pointer = currentReturnPoint;
-
+            lineData.lineNumber = lineNumbers[actualLineNumberPos];
+            
             if (parts.size() == 2) {
                 lineData.command = parts[0];
                 lineData.arguments = splitString(parts[1], argdelim);
@@ -210,6 +242,7 @@ std::pair<std::vector<std::string>, std::vector<Line>>
             currentReturnPoint = "";
             lines.push_back(lineData);
         }
+        actualLineNumberPos++;
     }
     return std::make_pair(stringlessPair.second, lines);
 }

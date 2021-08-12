@@ -80,8 +80,17 @@ struct Line {
     std::string command;
     std::vector<std::string> arguments;
     std::vector<std::string> returns;
+    int lineNumber;
 };
 
+/**
+ * @brief Wtf? Gets line numbers of semicolons?
+ * 
+ * @param s std::stirng - Uncut code
+ * @return std::vector&lt;std::pair&lt;int, int&gt;&gt;
+ */
+std::vector<int> lineNumberer(std::string s);
+    
 /**
  * @brief Parse source code into vector of line objects.
  * 

@@ -63,7 +63,7 @@ if __name__ == '__main__':
                         compiler, args = COMPILERS[extension]
                         os.system(f'{compiler} {args} -c {dirpath}/{filename} -o {object_file}')
                         object_files.append(object_file)
-        os.system(COMPILERS['cpp'][0] + ' ' + ' '.join(object_files) + f' -o {BIN_DIR}/{BIN}')
+        os.system(COMPILERS['cc'][0] + ' ' + ' '.join(object_files) + f' -o {BIN_DIR}/{BIN}')
 
     if 'run' in sys.argv:
         args = ''

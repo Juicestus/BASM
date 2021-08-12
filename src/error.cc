@@ -24,7 +24,8 @@
 void error(int n, std::string s) 
 {
     if (n >= 0) {
-        printf("\n\u001b[31mError: \"%s\" on line %d\u001b[0m\n", s.c_str(), n + 1);
+        printf("\n\u001b[31mError: \"%s\" around line %d\u001b[0m\n", s.c_str(), n);
+        
     } else {
         printf("\n\u001b[31mError: \"%s\"\u001b[0m\n", s.c_str());
     }
@@ -61,7 +62,8 @@ std::string printableVector(std::vector<std::string> sv)
 void printLines(std::vector<Line> lines) 
 {
     for (int i = 0; i < lines.size(); i++) {
-        std::cout << "Line #" << std::to_string(i) << std::endl;
+        std::cout << "Line #" << std::to_string(lines[i].lineNumber)
+                 << std::endl;
         std::cout << "  Pointer: " << lines[i].pointer << std::endl;
         std::cout << "  Command: " << lines[i].command << std::endl;
         std::cout << "  Args: " << printableVector(lines[i].arguments)
