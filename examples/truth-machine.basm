@@ -9,9 +9,8 @@ print: "Input number: ";
 set: "": input-str;
 read: 0: input-str;
 set: 0: input-int;
-stoi: input-str: input-int;
-isnul: input-int: conv-failed;
-jump: conv-failed, !redo-pt;
+stoi: input-str: conv-success, input-int;
+jumpn: conv-success, !redo-pt;
 
 eq: input-int, 0: is-zero;
 eq: input-int, 1: is-one;

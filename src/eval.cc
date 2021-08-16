@@ -199,7 +199,6 @@ void evaluate(Stack stack, std::vector<Line> lines)
 
             if (args.size() == 1) {
                 std::string strval;
-                std::cout << strval + "\n";
 
                 if (args[0].type == Type::STRING) {
                     strval = args[0].strVal;
@@ -208,9 +207,11 @@ void evaluate(Stack stack, std::vector<Line> lines)
                 }
 
                 try {
-                    stack.pushVar(line.returns[0], Variable((long) std::stoi(strval)));
+                    stack.pushVar(line.returns[0], Variable(true));
+                    stack.pushVar(line.returns[1], Variable((long) std::stoi(strval)));
                 } catch (...) {
-                    stack.pushVar(line.returns[0], Variable());
+                    stack.pushVar(line.returns[0], Variable(false));
+                    stack.pushVar(line.returns[1], Variable((long) 0));
                     //error(line.lineNumber, "Argument 1 not valid integer");
                 }
             } else {
@@ -238,9 +239,11 @@ void evaluate(Stack stack, std::vector<Line> lines)
                 }
 
                 try {
-                    stack.pushVar(line.returns[0], Variable(std::stof(strval)));
+                    stack.pushVar(line.returns[0], Variable(true));
+                    stack.pushVar(line.returns[1], Variable(std::stof(strval)));
                 } catch (...) {
-                    stack.pushVar(line.returns[0], Variable());
+                    stack.pushVar(line.returns[0], Variable(false));
+                    stack.pushVar(line.returns[1], Variable(0.0));
                     //error(line.lineNumber, "Argument 1 not valid integer");
                 }
             } else {
@@ -850,14 +853,14 @@ void evaluate(Stack stack, std::vector<Line> lines)
 
 
         /**
-         * @brief Cat function
+         * @brief strcat function
          * Takes in n args of any type and outputs
          * a string concatenation of the args.
          * 
          * The default "to string" function kinda
          * No need for another conversion
          */
-        else if (line.command == "cat") 
+        else if (line.command == "strcat") 
         {
             if (line.returns.size() == 0) {
                 error(line.lineNumber, "Invalid ammount of returns");
@@ -870,6 +873,26 @@ void evaluate(Stack stack, std::vector<Line> lines)
             stack.pushVar(line.returns[0], Variable(result));
         }
 
+         /**
+         * @brief strlen function
+         * Takes in n args of any type and outputs
+         * a string concatenation of the args.
+         * 
+         * The default "to string" function kinda
+         * No need for another conversion
+         */
+        else if (line.command == "strlen") 
+        {
+            if (line.returns.size() == 0) {
+                error(line.lineNumber, "Invalid ammount of returns");
+            }
+
+            std::string result;
+            for (int i=0; i < args.size(); i++) {
+                result += args[i].printable();
+            }
+            stack.pushVar(line.returns[0], Variable(result));
+        }
 
 
     }
